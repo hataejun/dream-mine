@@ -210,6 +210,12 @@ function updateAnim(p, dt){
 // 캐릭터 시트를 캔버스 도형으로 옮긴 것. 외부 이미지 없이 전부 여기서 그린다.
 // 비율은 치비(머리가 크고 팔다리가 짧다) — 머리 지름이 몸통 높이보다 크다.
 const SKIN = '#ffdcc0', SKIN_D = '#eec0a2';
+// 마리오식 배색 — 노랑(옷·모자) · 파랑(멜빵) · 흰색(장갑) · 갈색(신발).
+// 값이 뚜렷이 갈려서 작게 보여도 형태가 뭉치지 않는다.
+const CAP = '#ffd23f', CAP_D = '#dda413';
+const OVR = '#2f6fd0', OVR_D = '#1d4a99';
+const GLOVE = '#ffffff', GLOVE_D = '#cfd4e0';
+const SHOE = '#8a5a30', SHOE_D = '#5d3a1a';
 const PJ   = '#f7efc6', PJ_D  = '#e4d49a', PJ_L = '#fdf9e2';
 const HAIR = '#2f2722', HAIR_L = '#4d4038';
 
@@ -315,14 +321,23 @@ function drawHero(){
       roundRect(-4, len - 11, 8, 7, 2.6); ctx.fill();
       ctx.strokeStyle = '#2fa79c'; ctx.lineWidth = 1.4; ctx.stroke();
     }
-    // 맨발 — 다리 회전을 일부만 따라가 땅과 나란하게 유지한다
+    // 갈색 신발 — 다리 회전을 일부만 따라가 땅과 나란하게 유지한다
     ctx.translate(0, len);
     ctx.rotate(ang * 0.8);
-    ctx.fillStyle = SKIN;
-    ctx.beginPath(); ctx.ellipse(1.8, 2.4, 6.8, 4.4, 0, 0, 6.2832); ctx.fill();
-    ctx.strokeStyle = 'rgba(182,124,88,.8)'; ctx.lineWidth = 1.4; ctx.stroke();
-    ctx.fillStyle = SKIN_D;                          // 발바닥 그늘
-    ctx.beginPath(); ctx.ellipse(1.8, 4.2, 6.2, 1.8, 0, 0, 6.2832); ctx.fill();
+    ctx.fillStyle = SHOE;
+    ctx.beginPath();
+    ctx.moveTo(-4.6, -0.5);
+    ctx.quadraticCurveTo(-5.6, 5.2, 0, 5.6);
+    ctx.quadraticCurveTo(7.2, 5.8, 8.6, 2.6);        // 앞코가 앞으로 나온다
+    ctx.quadraticCurveTo(8.2, -0.8, 4.4, -1);
+    ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = SHOE_D; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.fillStyle = SHOE_D;                          // 밑창
+    ctx.beginPath();
+    ctx.moveTo(-5, 3.4); ctx.quadraticCurveTo(0, 6.2, 8.4, 3.2);
+    ctx.quadraticCurveTo(7.4, 5.8, 0, 5.8);
+    ctx.quadraticCurveTo(-5.4, 5.6, -5, 3.4);
+    ctx.closePath(); ctx.fill();
     ctx.restore();
   }
   leg(-5.4, po.legB);                                // 뒷다리 — 두 다리를 붙여 놓는다
@@ -340,6 +355,9 @@ function drawHero(){
   ctx.moveTo(-8.5, -37);
   ctx.lineTo(-12 - po.legF*.35, -25 + po.legF*.3);
   ctx.stroke();
+  ctx.fillStyle = GLOVE;                                   // 뒷손 장갑
+  ctx.beginPath(); ctx.arc(-12 - po.legF*.35, -25 + po.legF*.3, 4.6, 0, 6.2832); ctx.fill();
+  ctx.strokeStyle = GLOVE_D; ctx.lineWidth = 1.4; ctx.stroke();
 
   // ----- 상의 -----
   ctx.fillStyle = pj;
@@ -351,10 +369,24 @@ function drawHero(){
   ctx.moveTo(-8, -41); ctx.lineTo(2.5, -34); ctx.lineTo(12, -41);
   ctx.quadraticCurveTo(2.5, -37.5, -8, -41);
   ctx.closePath(); ctx.fill(); inked(1.2);
-  ctx.strokeStyle = INK; ctx.lineWidth = 1.3;             // 단추 여밈
-  ctx.beginPath(); ctx.moveTo(2.5, -35); ctx.lineTo(2.5, -22); ctx.stroke();
   ctx.fillStyle = pjD;                                    // 허리 — 상의보다 좁게
   roundRect(-10, -23, 20, 4.6, 2.2); ctx.fill(); inked(1.3);
+
+  // ----- 파란 멜빵 ----- 노란 옷 위에서 몸통을 위아래로 갈라준다
+  if(p.starT <= 0){
+    ctx.fillStyle = OVR;
+    roundRect(-7.5, -32, 15, 13, 3); ctx.fill();          // 가슴판
+    ctx.strokeStyle = OVR_D; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.lineCap = 'round';                                 // 어깨끈
+    ctx.strokeStyle = OVR; ctx.lineWidth = 4.2;
+    ctx.beginPath(); ctx.moveTo(-5.5, -31); ctx.lineTo(-9.5, -41); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo( 5.5, -31); ctx.lineTo( 9.5, -41); ctx.stroke();
+    ctx.fillStyle = CAP;                                   // 단추
+    ctx.beginPath(); ctx.arc(-5.5, -30.5, 1.9, 0, 6.2832); ctx.fill();
+    ctx.beginPath(); ctx.arc( 5.5, -30.5, 1.9, 0, 6.2832); ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,.28)';               // 광택
+    roundRect(-6, -30.5, 4.5, 9, 2); ctx.fill();
+  }
 
   // ----- 갑옷 -----
   if(gear >= 1){
@@ -404,28 +436,53 @@ function drawHero(){
   ctx.beginPath(); ctx.arc(0, 0, 17, 0, 6.2832); ctx.fill();
   ctx.strokeStyle = 'rgba(196,140,102,.55)'; ctx.lineWidth = 1.5; ctx.stroke();
 
-  // 머리카락 — 덥수룩한 바가지머리. 한 박자 늦게 따라 흔들린다.
+  // 머리카락 — 모자 밖으로 나온 부분만. 한 박자 늦게 따라 흔들린다.
   ctx.save(); ctx.rotate(p.hairLag * .8);
   ctx.fillStyle = HAIR;
-  // 옆머리는 두지 않는다 — 얼굴 옆으로 내려오면 금방 덥수룩해 보인다.
-  // 뒤통수만 살짝 남겨 머리통의 두께를 만든다.
-  ctx.beginPath(); ctx.ellipse(-14.6, -6.5, 3.6, 4.2, .2, 0, 6.2832); ctx.fill();
-  // 정수리부터 앞머리까지 — 앞머리 끝은 눈보다 위에서 멈춘다
+  ctx.beginPath(); ctx.ellipse(-15, -3, 4.2, 6.4, .18, 0, 6.2832); ctx.fill();   // 뒤통수
+  ctx.beginPath(); ctx.ellipse(-16, 3.5, 3.4, 4.2, .1, 0, 6.2832); ctx.fill();   // 목덜미
+  ctx.beginPath(); ctx.ellipse(15.6, -1, 3.0, 4.4, -.14, 0, 6.2832); ctx.fill(); // 구레나룻
+  // 모자 챙 밑으로 비져나온 앞머리
   ctx.beginPath();
-  ctx.moveTo(-17.0, -3.5);
-  ctx.quadraticCurveTo(-19.4, -12.5, -9, -19);
-  ctx.quadraticCurveTo(0, -23, 10, -18.5);
-  ctx.quadraticCurveTo(19.4, -11.5, 17.0, -2.5);
-  ctx.lineTo(14.5, -4.5); ctx.lineTo(11.5, -1);
-  ctx.lineTo(8, -6.5);    ctx.lineTo(4.5, -2);
-  ctx.lineTo(1, -7.5);    ctx.lineTo(-2.5, -2.5);
-  ctx.lineTo(-6.5, -7.5); ctx.lineTo(-10, -2);
-  ctx.lineTo(-13.5, -6);
+  ctx.moveTo(-16.5, -5);
+  ctx.quadraticCurveTo(0, -11, 16.5, -6);
+  ctx.lineTo(14, -1.5); ctx.lineTo(10.5, -5.5);
+  ctx.lineTo(7, -0.5);  ctx.lineTo(3.5, -5.5);
+  ctx.lineTo(0, -0.5);  ctx.lineTo(-3.5, -5);
+  ctx.lineTo(-7.5, -1); ctx.lineTo(-11, -5);
+  ctx.lineTo(-14, -1.5);
   ctx.closePath(); ctx.fill();
-  // 윤기
-  ctx.fillStyle = HAIR_L;
-  ctx.beginPath(); ctx.ellipse(-5, -14, 7, 3.0, -.42, 0, 6.2832); ctx.fill();
-  ctx.beginPath(); ctx.ellipse(9, -13, 4, 2.2, .38, 0, 6.2832); ctx.fill();
+
+  // ----- 노란 모자 -----
+  ctx.fillStyle = CAP;
+  ctx.beginPath();
+  ctx.moveTo(-17.5, -6);
+  ctx.quadraticCurveTo(-19, -18, -8, -22);
+  ctx.quadraticCurveTo(0, -24.5, 9, -21.5);
+  ctx.quadraticCurveTo(19, -17, 17.5, -6);
+  ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = CAP_D; ctx.lineWidth = 1.6; ctx.stroke();
+  // 챙 — 앞으로 길게 나온다
+  ctx.fillStyle = CAP_D;
+  ctx.beginPath();
+  ctx.moveTo(2, -9.5);
+  ctx.quadraticCurveTo(20, -13, 26.5, -7.5);
+  ctx.quadraticCurveTo(20, -3.5, 2, -4.5);
+  ctx.closePath(); ctx.fill();
+  ctx.fillStyle = CAP;
+  ctx.beginPath();
+  ctx.moveTo(2, -9.5);
+  ctx.quadraticCurveTo(19, -12.5, 25, -8);
+  ctx.quadraticCurveTo(19, -5.5, 2, -6.5);
+  ctx.closePath(); ctx.fill();
+  // 앞면 동그란 마크
+  ctx.fillStyle = OVR;
+  ctx.beginPath(); ctx.arc(6, -14.5, 5.2, 0, 6.2832); ctx.fill();
+  ctx.fillStyle = '#8fc0ff';
+  ctx.beginPath(); ctx.arc(6, -14.5, 2.6, 0, 6.2832); ctx.fill();
+  // 모자 윤기
+  ctx.fillStyle = 'rgba(255,255,255,.35)';
+  ctx.beginPath(); ctx.ellipse(-5, -17, 6, 2.6, -.35, 0, 6.2832); ctx.fill();
   ctx.restore();
 
   // 눈
@@ -488,11 +545,14 @@ function drawHero(){
   drawHeldWeapon(pawX, pawY, shX, shY);
 
   // 주먹은 무기 위에 — 손으로 자루를 쥐고 있는 게 보여야 한다
-  ctx.fillStyle = SKIN;
-  ctx.beginPath(); ctx.arc(pawX, pawY, 5.2, 0, 6.2832); ctx.fill();
-  ctx.strokeStyle = 'rgba(196,140,102,.7)'; ctx.lineWidth = 1.4; ctx.stroke();
-  ctx.fillStyle = SKIN_D;
-  ctx.beginPath(); ctx.arc(pawX + Math.cos(po.armRot)*1.7, pawY + Math.sin(po.armRot)*1.7, 2.2, 0, 6.2832); ctx.fill();
+  ctx.fillStyle = GLOVE;
+  ctx.beginPath(); ctx.arc(pawX, pawY, 5.6, 0, 6.2832); ctx.fill();
+  ctx.strokeStyle = GLOVE_D; ctx.lineWidth = 1.5; ctx.stroke();
+  ctx.strokeStyle = GLOVE_D; ctx.lineWidth = 1.3;          // 손등 주름
+  ctx.beginPath();
+  ctx.arc(pawX - Math.cos(po.armRot)*1.4, pawY - Math.sin(po.armRot)*1.4, 3.4,
+          po.armRot - 1.1, po.armRot + 1.1);
+  ctx.stroke();
 
   ctx.restore();   // 몸통 그룹
   ctx.restore();
