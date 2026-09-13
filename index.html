@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="꿈나라 대모험">
+<meta name="theme-color" content="#8fd3f4">
+<meta name="description" content="잠옷 입은 꼬마가 곡괭이·방패·도토리를 바꿔가며 싸우는 액션 게임">
+<title>꿈나라 대모험</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="stage">
+  <canvas id="game"></canvas>
+
+  <div class="hud">
+    <div class="hud-left">
+      <div class="hearts" id="hearts"></div>
+      <div class="powers" id="powers"></div>
+    </div>
+    <div class="stats">
+      <div id="score">0</div>
+      <div class="wave" id="waveLabel">웨이브 1</div>
+    </div>
+  </div>
+
+  <div class="bossbar" id="bossBar" hidden>
+    <div class="bossname">👑 왕밤톨이</div>
+    <div class="bossbar-track"><div class="bossbar-fill" id="bossFill"></div></div>
+  </div>
+
+  <div class="banner" id="banner"></div>
+
+  <div class="hotbar" id="hotbar"></div>
+
+  <div class="touch" id="touch">
+    <div class="btn left" data-act="left">◀</div>
+    <div class="btn right" data-act="right">▶</div>
+    <div class="btn jump" data-act="jump">점프</div>
+    <div class="btn atk" data-act="attack">공격</div>
+  </div>
+
+  <div class="overlay" id="titleScreen">
+    <div class="panel">
+      <h1>⛏️ 꿈나라 대모험</h1>
+      <p class="sub">꿈속 숲길을 달려가 <b>왕밤톨이</b>를 물리치세요!<br>무기를 바꿔가며 싸우면 훨씬 쉬워요.</p>
+      <div class="keys">
+        <b>← →</b><span>걷기</span>
+        <b>↑ / W</b><span>점프 · 공중에서 누르고 있으면 꼬리 활강</span>
+        <b>Space / Z</b><span>공격 — 연달아 누르면 <b style="background:none;color:#c47f10;padding:0">3단 콤보</b>! 화면을 눌러도 돼요</span>
+        <b>Shift</b><span>대시 — 앞으로 슝! (방향 버튼 두 번 톡톡 해도 돼요)</span>
+        <b>1 2 3</b><span>무기 바꾸기 (🗡️ 칼 · 🛡️ 방패 · 🌰 도토리)</span>
+      </div>
+      <button class="big" id="startBtn">시작하기</button>
+    </div>
+  </div>
+
+  <div class="overlay" id="clearScreen" hidden>
+    <div class="panel">
+      <h2>🎉 꿈속 숲을 지켰어요!</h2>
+      <p class="sub">왕밤톨이를 물리치고 숲에 평화가 돌아왔습니다.</p>
+      <div class="score-big" id="clearScore">0</div>
+      <p class="sub" id="clearTime">걸린 시간</p>
+      <button class="big" id="clearAgainBtn">한 번 더!</button>
+    </div>
+  </div>
+
+  <div class="overlay" id="overScreen" hidden>
+    <div class="panel">
+      <h2 id="overTitle">아야! 쉬었다 가요 🌰</h2>
+      <p class="sub">괜찮아요, 다시 도전! 💪</p>
+      <div class="score-big" id="finalScore">0</div>
+      <p class="sub" id="finalWave">웨이브 1까지 버텼어요</p>
+      <button class="big" id="againBtn">다시 하기</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- 빌드 도구 없음: 순서대로 읽히는 평범한 스크립트들 -->
+<script src="js/core.js"></script>
+<script src="js/fx.js"></script>
+<script src="js/player.js"></script>
+<script src="js/anim.js"></script>
+<script src="js/enemy.js"></script>
+<script src="js/stage.js"></script>
+<script src="js/boss.js"></script>
+<script src="js/render.js"></script>
+<script src="js/input.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>

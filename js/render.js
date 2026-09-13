@@ -1,0 +1,250 @@
+// 배경 · 지형 · 화면 합성
+// 로드 순서 8/10 · 의존: core, stage
+'use strict';
+
+/* ============================================================
+   그리기
+   ============================================================ */
+
+// ---------- 배경 (별의커비 톤: 파스텔 + 둥근 언덕) ----------
+// 뒤쪽 레이어일수록 천천히 흐른다 = 시차(parallax). 옆으로 걷는 느낌은 여기서 나온다.
+const clouds = [];
+for(let i=0;i<7;i++) clouds.push({ x:rand(0,1400), y:rand(40,200), s:rand(.6,1.3), v:rand(4,12) });
+
+// 같은 무늬를 월드 전체에 반복해서 깔아주는 도우미
+function layer(factor, period, drawFn){
+  const shift = cam.x * factor;
+  const k0 = Math.floor((shift - period) / period);
+  const k1 = Math.ceil((shift + W + period) / period);
+  for(let k = k0; k <= k1; k++) drawFn(k * period - shift, k);
+}
+
+function drawBackground(dt){
+  const g = ctx.createLinearGradient(0,0,0,GROUND_Y);
+  g.addColorStop(0, '#7fc9f2');
+  g.addColorStop(.55, '#a9e2f7');
+  g.addColorStop(1, '#d9f4e4');
+  ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+
+  // 해 — 아주 멀리 있으므로 거의 안 움직인다
+  const sunX = 830 - cam.x * .04;
+  ctx.save();
+  ctx.globalAlpha = .5; ctx.fillStyle = '#fff6c9';
+  ctx.beginPath(); ctx.arc(sunX, 82, 62, 0, 6.2832); ctx.fill();
+  ctx.globalAlpha = 1; ctx.fillStyle = '#fff3ae';
+  ctx.beginPath(); ctx.arc(sunX, 82, 38, 0, 6.2832); ctx.fill();
+  ctx.restore();
+
+  // 구름
+  ctx.fillStyle = 'rgba(255,255,255,.88)';
+  const span = W + 280;
+  for(const c of clouds){
+    if(!REDUCED) c.x += c.v * dt;
+    const x = ((c.x - cam.x * .12) % span + span) % span - 140;
+    ctx.save(); ctx.translate(x, c.y); ctx.scale(c.s, c.s);
+    ctx.beginPath();
+    ctx.arc(0,0,24,0,6.2832); ctx.arc(26,-8,30,0,6.2832);
+    ctx.arc(56,2,22,0,6.2832); ctx.arc(28,14,26,0,6.2832);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // 먼 언덕
+  ctx.fillStyle = '#a8dfae';
+  layer(.30, 560, x=>{ hill(x+140, GROUND_Y+10, 240, 132); hill(x+420, GROUND_Y+10, 195, 104); });
+  // 가까운 언덕
+  ctx.fillStyle = '#8ed49a';
+  layer(.55, 430, x=>{ hill(x+90, GROUND_Y+12, 205, 92); hill(x+310, GROUND_Y+12, 168, 74); });
+  // 나무
+  layer(.85, 350, (x,k)=>{
+    tree(x+60,  GROUND_Y+6, .92);
+    tree(x+225, GROUND_Y+6, (k % 3 === 0) ? .66 : .78);
+  });
+}
+function hill(cx, baseY, rx, ry){
+  ctx.beginPath();
+  ctx.ellipse(cx, baseY, rx, ry, 0, Math.PI, 0);
+  ctx.fill();
+}
+function tree(x, baseY, s){
+  ctx.save(); ctx.translate(x, baseY); ctx.scale(s, s);
+  ctx.fillStyle = '#b07a4e';
+  ctx.fillRect(-9, -66, 18, 66);
+  ctx.fillStyle = '#6ec37d';
+  ctx.beginPath();
+  ctx.arc(0, -86, 42, 0, 6.2832);
+  ctx.arc(-32, -68, 28, 0, 6.2832);
+  ctx.arc(32, -68, 28, 0, 6.2832);
+  ctx.fill();
+  ctx.fillStyle = 'rgba(255,255,255,.22)';
+  ctx.beginPath(); ctx.arc(-12, -100, 16, 0, 6.2832); ctx.fill();
+  ctx.restore();
+}
+
+// ---------- 지형 ----------
+// 카메라에 보이는 범위만 그린다 (월드가 4400px라 전부 그리면 낭비)
+function drawPlatforms(){
+  const l = cam.x - 40, r = cam.x + W + 40;
+
+  // 땅
+  ctx.fillStyle = '#7cc98a'; ctx.fillRect(l, GROUND_Y, r-l, H-GROUND_Y);
+  ctx.fillStyle = '#95dc9f'; ctx.fillRect(l, GROUND_Y, r-l, 14);
+  ctx.fillStyle = '#b3825a'; ctx.fillRect(l, GROUND_Y+30, r-l, H-GROUND_Y-30);
+
+  // 흙 점박이 — 월드 좌표에 고정돼 있어야 흐르는 게 보인다
+  ctx.fillStyle = 'rgba(255,255,255,.10)';
+  const step = 97;
+  for(let k = Math.floor(l/step); k <= Math.ceil(r/step); k++){
+    const x = k * step;
+    ctx.beginPath();
+    ctx.arc(x, GROUND_Y + 42 + (((k*53) % 26 + 26) % 26), 3 + (((k % 3) + 3) % 3), 0, 6.2832);
+    ctx.fill();
+  }
+
+  // 솔리드 블록 (언덕 덩어리)
+  for(const b of STAGE.blocks){
+    if(b.x + b.w < l || b.x > r) continue;
+    ctx.fillStyle = '#b3825a'; roundRect(b.x, b.y, b.w, b.h, 8); ctx.fill();
+    ctx.fillStyle = '#8ed49a'; roundRect(b.x, b.y, b.w, 18, 8); ctx.fill();
+    ctx.fillStyle = '#a9e6b2'; roundRect(b.x, b.y, b.w, 9, 7); ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,.09)';
+    ctx.beginPath(); ctx.arc(b.x + b.w*.3, b.y + b.h*.6, 4, 0, 6.2832); ctx.fill();
+    ctx.beginPath(); ctx.arc(b.x + b.w*.7, b.y + b.h*.75, 3, 0, 6.2832); ctx.fill();
+  }
+
+  // 떠 있는 발판 (통나무 느낌)
+  for(const p of STAGE.plats){
+    if(p.x + p.w < l || p.x > r) continue;
+    roundRect(p.x, p.y, p.w, 28, 9); ctx.fillStyle = '#b3825a'; ctx.fill();
+    roundRect(p.x, p.y, p.w, 20, 9); ctx.fillStyle = '#8ed49a'; ctx.fill();
+    roundRect(p.x, p.y, p.w, 10, 8); ctx.fillStyle = '#a9e6b2'; ctx.fill();
+  }
+
+  // 보스 아레나 입구 — 들어가면 덩굴이 내려와 닫힌다
+  if(phase === 'boss'){
+    const gx = STAGE.arena.l - 26;
+    ctx.fillStyle = '#6b8f4e';
+    ctx.fillRect(gx, 0, 26, H);
+    ctx.fillStyle = '#84ab63';
+    for(let y = 0; y < H; y += 46){
+      ctx.beginPath(); ctx.ellipse(gx+13, y+23, 15, 20, 0, 0, 6.2832); ctx.fill();
+    }
+    ctx.fillStyle = 'rgba(0,0,0,.15)';
+    ctx.fillRect(gx+22, 0, 4, H);
+  }
+}
+function roundRect(x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);
+  ctx.arcTo(x,y,x+w,y,r);
+  ctx.closePath();
+}
+
+// ---------- 프레임 ----------
+function draw(dt){
+  ctx.save();
+  let ox = 0, oy = 0;
+  if(!REDUCED){
+    if(shake > 0.4){ ox += rand(-shake,shake)*0.5; oy += rand(-shake,shake)*0.5; }
+    // 때린 방향으로 화면을 툭 밀어준다
+    if(punch.t > 0){ const k = punch.t/.12; ox += punch.x*k; oy += punch.y*k; }
+  }
+  if(ox || oy) ctx.translate(ox, oy);
+
+  drawBackground(dt);            // 배경은 스스로 시차를 적용한다
+
+  // ===== 여기부터 월드 좌표 — 카메라만큼 밀어서 그린다 =====
+  ctx.save();
+  ctx.translate(-Math.round(cam.x), 0);
+
+  drawPlatforms();
+
+  // 아이템
+  const vl = cam.x - 60, vr = cam.x + W + 60;
+  for(const it of pickups){
+    if(it.x < vl || it.x > vr) continue;
+    const blink = !it.fixed && it.life < 3 && Math.floor(it.life*8)%2 === 0;
+    if(blink) continue;
+    ctx.save();
+    ctx.translate(it.x+11, it.y+11 + (it.fixed ? Math.sin(it.t*3)*3 : 0));
+    ctx.scale(1 + Math.sin(it.t*6)*0.08, 1 - Math.sin(it.t*6)*0.08);
+    const def = ITEM_DEF[it.kind] || ITEM_DEF.acorn;
+    if(def.dur || it.kind === 'mushroom'){
+      // 힘을 주는 아이템은 은은하게 빛난다 — 멀리서도 "저건 좋은 것"이 보이게
+      ctx.save();
+      ctx.globalAlpha = .55 + Math.sin(it.t * 4) * .2;
+      const r = 22 + Math.sin(it.t * 4) * 2;
+      const gl = ctx.createRadialGradient(0, 0, 2, 0, 0, r);
+      gl.addColorStop(0, def.tint);
+      gl.addColorStop(.45, def.tint + '88');
+      gl.addColorStop(1, def.tint + '00');
+      ctx.fillStyle = gl;
+      ctx.beginPath(); ctx.arc(0, 0, r, 0, 6.2832); ctx.fill();
+      ctx.restore();
+    }
+    if(it.kind === 'acorn'){
+      drawAcorn(0, 0, 1.25);
+    } else {
+      ctx.font = '26px serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(def.emoji, 0, 1);
+    }
+    ctx.restore();
+  }
+
+  for(const e of enemies){
+    if(e.x + e.w < vl || e.x > vr) continue;
+    drawEnemy(e);
+  }
+  if(boss) drawBoss();
+
+  // 날아가는 도토리
+  for(const s of shots){
+    ctx.save(); ctx.translate(s.x+7, s.y+7); ctx.rotate(s.rot);
+    drawAcorn(0, 0, 1.05, s.foe ? 0 : (s.lv || 0));
+    ctx.restore();
+  }
+
+  for(const g of ghosts) drawGhost(g);
+  drawHero();
+
+  // 타격 충격파
+  for(const r of rings){
+    const a = clamp(r.life / r.max, 0, 1);
+    ctx.save();
+    ctx.globalAlpha = a * .9;
+    ctx.strokeStyle = r.color;
+    ctx.lineWidth = Math.max(1, r.width * a);
+    ctx.beginPath(); ctx.arc(r.x, r.y, r.r, 0, 6.2832); ctx.stroke();
+    ctx.restore();
+  }
+
+  // 입자
+  for(const pa of particles){
+    const a = clamp(pa.life / pa.max, 0, 1);
+    ctx.save();
+    ctx.globalAlpha = a;
+    ctx.translate(pa.x, pa.y); ctx.rotate(pa.rot);
+    ctx.fillStyle = pa.color;
+    ctx.beginPath(); ctx.arc(0, 0, pa.size * (0.4 + a*0.6), 0, 6.2832); ctx.fill();
+    ctx.restore();
+  }
+
+  // 점수 텍스트
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  for(const f of floaters){
+    ctx.save();
+    ctx.globalAlpha = clamp(f.life/0.9, 0, 1);
+    ctx.font = '800 20px ' + getComputedStyle(document.body).fontFamily;
+    ctx.lineWidth = 4; ctx.strokeStyle = 'rgba(59,42,30,.55)';
+    ctx.strokeText(f.text, f.x, f.y);
+    ctx.fillStyle = f.color;
+    ctx.fillText(f.text, f.x, f.y);
+    ctx.restore();
+  }
+
+  ctx.restore();   // 월드 좌표 끝
+  ctx.restore();
+}
