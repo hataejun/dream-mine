@@ -733,3 +733,76 @@ function drawGhost(g){
   ctx.beginPath(); ctx.arc(1, -44, 17, 0, 6.2832); ctx.fill();   // 머리
   ctx.restore();
 }
+
+// ---------- 아이템 그림 ----------
+// 이모지는 기기마다 모양이 달라서 쓰지 않는다.
+// Kenney 스프라이트가 있으면 그걸 쓰고, 없는 것(꿀·나뭇잎·방어구)은 직접 그린다.
+const ITEM_SPRITE = {
+  heart: 'hud_heartFull',
+  mushroom: 'mushroomRed',
+  star: 'star',
+  gem: 'gemBlue',
+};
+
+function drawItemIcon(kind, size){
+  const s = size || 26;
+  const key = ITEM_SPRITE[kind];
+  if(key && imgReady(key)){
+    const im = IMG[key];
+    const k = s / Math.max(im.naturalWidth, im.naturalHeight);
+    ctx.drawImage(im, -im.naturalWidth*k/2, -im.naturalHeight*k/2,
+                      im.naturalWidth*k, im.naturalHeight*k);
+    return;
+  }
+  const r = s / 26;                       // 26px 기준으로 그린 뒤 배율만 맞춘다
+  ctx.save(); ctx.scale(r, r);
+  switch(kind){
+    case 'acorn': drawAcorn(0, 0, 1.25); break;
+
+    case 'honey':                          // 🍯 꿀단지
+      ctx.fillStyle = '#c98a4b';
+      roundRect(-8, -4, 16, 14, 4); ctx.fill();
+      ctx.strokeStyle = '#8a5a30'; ctx.lineWidth = 1.4; ctx.stroke();
+      ctx.fillStyle = '#ffb84d';            // 흘러넘친 꿀
+      roundRect(-9, -7, 18, 5, 2.4); ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(4, -3); ctx.quadraticCurveTo(6.5, 1, 4.5, 4);
+      ctx.quadraticCurveTo(2.5, 1, 4, -3); ctx.fill();
+      ctx.fillStyle = '#8a5a30';            // 뚜껑 손잡이
+      roundRect(-3, -10, 6, 3.4, 1.6); ctx.fill();
+      break;
+
+    case 'leaf':                           // 🍃 나뭇잎
+      ctx.fillStyle = '#7bd35a';
+      ctx.beginPath();
+      ctx.moveTo(-9, 6);
+      ctx.quadraticCurveTo(-7, -10, 9, -8);
+      ctx.quadraticCurveTo(8, 8, -9, 6);
+      ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = '#4f9a3c'; ctx.lineWidth = 1.4; ctx.stroke();
+      ctx.beginPath();                      // 잎맥
+      ctx.moveTo(-8, 5.5); ctx.quadraticCurveTo(0, -2, 8, -7);
+      ctx.stroke();
+      break;
+
+    case 'armor':                          // 💠 다이아몬드 방어구
+      ctx.fillStyle = '#e6fbf8';
+      ctx.beginPath();
+      ctx.moveTo(-9, -7); ctx.lineTo(9, -7); ctx.lineTo(9, 2);
+      ctx.quadraticCurveTo(9, 9, 0, 11);
+      ctx.quadraticCurveTo(-9, 9, -9, 2);
+      ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = '#2fa79c'; ctx.lineWidth = 1.6; ctx.stroke();
+      ctx.fillStyle = '#2fa79c';
+      ctx.beginPath();
+      ctx.moveTo(0, -3.5); ctx.lineTo(4.5, 1); ctx.lineTo(0, 5.5); ctx.lineTo(-4.5, 1);
+      ctx.closePath(); ctx.fill();
+      break;
+
+    default:                               // 모르는 종류 — 눈에 띄는 표식
+      ctx.fillStyle = '#ffd76a';
+      ctx.beginPath(); ctx.arc(0, 0, 9, 0, 6.2832); ctx.fill();
+      ctx.strokeStyle = '#c99a2a'; ctx.lineWidth = 1.6; ctx.stroke();
+  }
+  ctx.restore();
+}

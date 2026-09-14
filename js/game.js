@@ -62,6 +62,18 @@ function reset(){
 
 // ---------- HUD ----------
 const heartsEl = document.getElementById('hearts');
+
+// 하트 한 칸 — 그림으로 그리되, 못 불러오면 이모지로 물러선다
+function makeHeart(){
+  const d = document.createElement('div');
+  d.className = 'heart';
+  const im = document.createElement('img');
+  im.alt = ''; im.draggable = false;
+  im.onerror = ()=>{ im.remove(); d.classList.add('emoji'); d.textContent = '❤️'; };
+  im.src = 'assets/items/hud_heartFull.png';
+  d.appendChild(im);
+  return d;
+}
 const scoreEl = document.getElementById('score');
 const waveEl = document.getElementById('waveLabel');
 const powersEl = document.getElementById('powers');
@@ -72,13 +84,19 @@ const bannerEl = document.getElementById('banner');
 function syncHUD(){
   if(heartsEl.children.length !== player.maxHp){
     heartsEl.innerHTML = '';
-    for(let i=0;i<player.maxHp;i++){
-      const d = document.createElement('div');
-      d.className = 'heart'; d.textContent = '❤️';
-      heartsEl.appendChild(d);
-    }
+    for(let i=0;i<player.maxHp;i++) heartsEl.appendChild(makeHeart());
   }
-  [...heartsEl.children].forEach((el,i)=> el.classList.toggle('empty', i >= player.hp));
+  [...heartsEl.children].forEach((el,i)=>{
+    const empty = i >= player.hp;
+    el.classList.toggle('empty', empty);
+    const im = el.firstElementChild;
+    if(im && im.tagName === 'IMG'){
+      const want = 'assets/items/' + (empty ? 'hud_heartEmpty' : 'hud_heartFull') + '.png';
+      if(!im.src.endsWith(want)) im.src = want;
+    } else {
+      el.textContent = empty ? '🤍' : '❤️';       // 그림을 못 불러왔을 때
+    }
+  });
   syncPowers();
   scoreEl.textContent = score;
   waveEl.textContent = phase === 'boss' ? '보스전' : '숲길';

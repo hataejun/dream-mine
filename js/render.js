@@ -236,12 +236,7 @@ function draw(dt){
       ctx.beginPath(); ctx.arc(0, 0, r, 0, 6.2832); ctx.fill();
       ctx.restore();
     }
-    if(it.kind === 'acorn'){
-      drawAcorn(0, 0, 1.25);
-    } else {
-      ctx.font = '26px serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText(def.emoji, 0, 1);
-    }
+    drawItemIcon(it.kind, 27);
     ctx.restore();
   }
 

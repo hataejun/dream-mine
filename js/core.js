@@ -130,6 +130,11 @@ for(const t of ['grassMid','grassLeft','grassRight',
   loadImage(t, 'assets/tiles/' + t + '.png');
 }
 
+// 아이템 그림 — 이모지는 기기마다 모양이 달라서 스프라이트로 그린다
+for(const t of ['hud_heartFull','hud_heartEmpty','mushroomRed','star','gemBlue']){
+  loadImage(t, 'assets/items/' + t + '.png');
+}
+
 // ---------- 연출 세기 ----------
 // 히트스톱과 화면 흔들림은 조금만 넘쳐도 "게임이 버벅인다"로 느껴진다.
 // 두 숫자만 만지면 전체 세기가 한 번에 바뀐다. 0으로 두면 완전히 꺼진다.
