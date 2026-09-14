@@ -113,8 +113,8 @@ function updateEnemy(e, dt){
 
 function damageEnemy(e, dmg, knockDir, knockPower, fx){
   const heavy = dmg >= 2;
-  const stop = (fx && fx.stop) || 0.05;
-  const shk  = (fx && fx.shake) || 3;
+  const stop = (fx && fx.stop) || 0.034;
+  const shk  = (fx && fx.shake) || 2.2;
 
   e.hp -= dmg;
   e.hitT = .18;
@@ -135,8 +135,8 @@ function damageEnemy(e, dmg, knockDir, knockPower, fx){
     spawnParticles(cx, cy, 6, '#ffffff', {up:200, spread:200, size:6});
     addRing(cx, cy, 78, d.color, 8);
     e.dead = true;
-    hitstop = Math.max(hitstop, stop + .05);
-    shake = Math.min(shake + 5 + shk, 15);
+    freeze(stop + .028);
+    shakeBy(3.4 + shk, 11);
     sfx('pop');
     // 가끔 뭔가를 떨어뜨린다 — 체력이 깎였을 때만 하트가 나온다
     const roll = Math.random();
@@ -147,8 +147,8 @@ function damageEnemy(e, dmg, knockDir, knockPower, fx){
     }
     syncHUD();
   } else {
-    hitstop = Math.max(hitstop, stop);
-    shake = Math.min(shake + shk, 12);
+    freeze(stop);
+    shakeBy(shk, 9);
     sfx(heavy ? 'hit3' : 'hit');
   }
 }
@@ -165,8 +165,8 @@ function hurtPlayer(dir, src){
     p.vx = -dir * 260; p.vy = -260;
     p.combo = 0; p.comboT = 0; p.dashT = 0; p.lungeT = 0;
     if(src){ src.vx = dir * 300; src.vy = -160; src.hitT = .12; }
-    shake = 11;
-    hitstop = Math.max(hitstop, .10);
+    shake = 7.5 * FX_SHAKE;
+    freeze(.075);
     addRing(p.x + p.w/2, p.y + p.h/2, 90, '#ffd2c0', 8);
     spawnParticles(p.x + p.w/2, p.y + p.h/2, 12, '#ffd2c0', {up:240, spread:220});
     floatText(p.x + p.w/2, p.y - 6, '작아졌다!', '#ff8f7a');
@@ -184,8 +184,8 @@ function hurtPlayer(dir, src){
   player.vy = -320;
   player.combo = 0; player.comboT = 0;
   player.dashT = 0; player.lungeT = 0;
-  shake = 12;
-  hitstop = Math.max(hitstop, .13);
+  shake = 8 * FX_SHAKE;
+  freeze(.085);
   addPunch(-dir * 12, 0);
   addRing(player.x+player.w/2, player.y+player.h/2, 60, '#ffb3c4', 7);
   spawnParticles(player.x+player.w/2, player.y+player.h/2, 10, '#ff9db4', {up:240, spread:200});

@@ -266,26 +266,35 @@ function drawHero(){
   if(caped){
     const CA = gear >= 3 ? '#4a95ef' : '#3573d6';
     const CA_D = gear >= 3 ? '#1f5bb5' : '#1c4a9c';
+    // 접혔을 땐 등 뒤로 치우쳐 늘어지고, 활강하면 좌우로 활짝 펴진다.
+    // 좌우 대칭으로 접으면 부채처럼 보여서 천 느낌이 안 난다.
+    const t = clamp((sp - 1) / 0.5, 0, 1);            // 0 접힘 · 1 활짝
+    const back  = -19 - 11 * t;                        // 등 쪽 가장자리
+    const front =   3 + 27 * t;                        // 앞쪽 가장자리 (접히면 몸에 붙는다)
+    const bot   = -15 +  7 * t;                        // 아랫단 높이
+    const mid   = (back + front) / 2;
+
     ctx.save();
-    ctx.translate(0, -40); ctx.rotate(p.flapLag * .9); ctx.translate(0, 40);
-    const w = 21 * sp;                  // 활강하면 활짝 펴진다
+    ctx.translate(0, -41); ctx.rotate(p.flapLag * (.45 + .55 * t)); ctx.translate(0, 41);
     ctx.beginPath();
-    ctx.moveTo(-10, -41);
-    ctx.quadraticCurveTo(-w - 2, -30, -w, -8);
-    ctx.quadraticCurveTo(-w*.6, -13, -w*.34, -7);      // 물결진 아랫단
-    ctx.quadraticCurveTo(0, -13, w*.34, -7);
-    ctx.quadraticCurveTo(w*.6, -13, w, -8);
-    ctx.quadraticCurveTo(w + 2, -30, 10, -41);
+    ctx.moveTo(-10, -42);
+    ctx.quadraticCurveTo(back - 3, -33, back, bot - 3);           // 등을 타고 흘러내림
+    ctx.quadraticCurveTo((back + mid)/2, bot + 5, mid, bot);      // 물결진 아랫단
+    ctx.quadraticCurveTo((mid + front)/2, bot + 5, front, bot - 3);
+    ctx.quadraticCurveTo(front + 2, -33, 10, -42);
     ctx.closePath();
     ctx.fillStyle = CA; ctx.fill();
     ctx.strokeStyle = CA_D; ctx.lineWidth = 1.8; ctx.stroke();
-    ctx.fillStyle = 'rgba(14,40,92,.38)';             // 안쪽 접힘 그늘
-    ctx.beginPath();
-    ctx.moveTo(-7, -41);
-    ctx.quadraticCurveTo(-w*.55, -28, -w*.42, -9);
-    ctx.quadraticCurveTo(0, -14, w*.42, -9);
-    ctx.quadraticCurveTo(w*.55, -28, 7, -41);
-    ctx.closePath(); ctx.fill();
+    // 세로 주름 — 천이 늘어져 있다는 걸 보여준다
+    ctx.strokeStyle = 'rgba(14,40,92,.30)'; ctx.lineWidth = 1.6; ctx.lineCap = 'round';
+    for(const f of [0.3, 0.55, 0.78]){
+      const x0 = -10 + (back + 10) * f * 0.5;
+      const x1 = back + (front - back) * f;
+      ctx.beginPath();
+      ctx.moveTo(x0, -40);
+      ctx.quadraticCurveTo((x0 + x1)/2 - 2, (-40 + bot)/2, x1, bot + 1);
+      ctx.stroke();
+    }
     ctx.restore();
   } else {
     ctx.save();                                        // 잠옷 자락

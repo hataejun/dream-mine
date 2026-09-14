@@ -14,9 +14,9 @@ const WEAPONS = [
 // 칼 3단 콤보 — 1타·2타는 빠르고, 마무리는 느리지만 크고 세다
 // stop = 맞는 순간 화면을 멈추는 시간(히트스톱), arc = 칼이 지나가는 각도
 const SWORD_COMBO = [
-  { cool:0.24, windup:0.045, active:0.16, reach:64, dmg:1, knock:340, lunge:170, stop:0.055, shake:3, arc:[-2.05,  1.45] },
-  { cool:0.24, windup:0.045, active:0.16, reach:64, dmg:1, knock:360, lunge:170, stop:0.055, shake:3, arc:[ 1.45, -2.05] },
-  { cool:0.44, windup:0.115, active:0.20, reach:82, dmg:2, knock:780, lunge:300, stop:0.125, shake:9, arc:[-2.45,  1.95] },
+  { cool:0.24, windup:0.045, active:0.16, reach:64, dmg:1, knock:340, lunge:170, stop:0.034, shake:2.2, arc:[-2.05,  1.45] },
+  { cool:0.24, windup:0.045, active:0.16, reach:64, dmg:1, knock:360, lunge:170, stop:0.034, shake:2.2, arc:[ 1.45, -2.05] },
+  { cool:0.44, windup:0.115, active:0.20, reach:82, dmg:2, knock:780, lunge:300, stop:0.080, shake:6,   arc:[-2.45,  1.95] },
 ];
 
 // ---------- 무기 강화 단계 ----------
@@ -133,7 +133,7 @@ function updateAttack(dt){
           } else {
             // 방패는 데미지보다 밀치는 맛 — 단계가 오를수록 훨씬 멀리 날아간다
             damageEnemy(e, (1 + (lv >= 2 ? 1 : 0)) * dmgMul(), dir,
-                        620 * (1 + lv * .3), { stop:.07 + lv*.01, shake:5 + lv });
+                        620 * (1 + lv * .3), { stop:.045 + lv*.008, shake:3.5 + lv*.7 });
           }
         }
       }

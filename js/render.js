@@ -35,6 +35,24 @@ function drawBackground(dt){
   ctx.beginPath(); ctx.arc(sunX, 82, 38, 0, 6.2832); ctx.fill();
   ctx.restore();
 
+  // 가장 먼 산자락 — Kenney 실루엣. 못 불러왔으면 그냥 건너뛴다(아래 언덕만으로도 그림이 된다).
+  if(imgReady('bg')){
+    const im = IMG.bg;
+    // 원본 위쪽은 그 그림 자체의 하늘이라 잘라낸다. 안 자르면 우리 하늘 위에
+    // 색이 다른 가로 띠가 생긴다.
+    const sy = 150, sh = im.naturalHeight - sy;
+    const bh = 210;
+    const bw = im.naturalWidth * (bh / sh);
+    const by = GROUND_Y - 25 - bh;
+    layer(.15, bw, x => ctx.drawImage(im, 0, sy, im.naturalWidth, sh, x, by, bw, bh));
+    // 잘린 윗변을 하늘색으로 부드럽게 덮어 경계를 지운다
+    const fade = ctx.createLinearGradient(0, by, 0, by + 58);
+    fade.addColorStop(0, '#a2def6');
+    fade.addColorStop(1, 'rgba(162,222,246,0)');
+    ctx.fillStyle = fade;
+    ctx.fillRect(0, by, W, 58);
+  }
+
   // 구름
   ctx.fillStyle = 'rgba(255,255,255,.88)';
   const span = W + 280;

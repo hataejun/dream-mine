@@ -113,7 +113,29 @@ console.log('\n[마무리 일격]');
   const r4 = swingUntilHit(e4);
   ok('3타는 콤보 2단계', P.combo === 2, P.combo);
   ok('3타는 2칸 데미지', r4.hp0 - e4.hp >= 2 || e4.dead, r4.hp0 + ' → ' + e4.hp);
-  ok('3타 히트스톱이 더 김', g().hitstop >= 0.12, g().hitstop.toFixed(3));
+  // 절대값이 아니라 "1타보다 길다"로 본다 — 연출 세기를 조절해도 의미가 유지되게
+  const stop3 = g().hitstop;
+  {
+    const e5 = scene(300, 'chestnut', 360);
+    swingUntilHit(e5);
+    const stop1 = g().hitstop;
+    ok('3타 멈춤이 1타보다 김', stop3 > stop1, '1타 ' + stop1.toFixed(3) + ' < 3타 ' + stop3.toFixed(3));
+  }
+
+  // 연타로 멈춤이 쌓여 게임이 버벅이지 않도록 상한이 걸려 있어야 한다
+  {
+    releaseAll();
+    const e6 = scene(300, 'chestnut', 350);
+    const P6 = g().p;
+    let worst = 0;
+    for(let i = 0; i < 240; i++){
+      if(i % 9 === 0){ P6.atkBuf = 0; key('keydown','Space'); key('keyup','Space'); }
+      if(e6.dead || e6.hp <= 0){ e6.hp = 99; e6.dead = false; e6.stun = 0; e6.x = P6.x + 50; }
+      step(1000/60);
+      worst = Math.max(worst, g().hitstop);
+    }
+    ok('멈춤이 상한을 넘지 않음', worst <= 0.115, '최대 ' + worst.toFixed(3) + 's');
+  }
 }
 
 // ---------- 5) 애니메이션 ----------

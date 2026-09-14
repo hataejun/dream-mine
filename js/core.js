@@ -99,3 +99,40 @@ function sfx(kind){
     case 'over':   [440,392,330,262].forEach((f,i)=> tone(f, .3, 'triangle', .10, i*0.16)); break;
   }
 }
+
+// ---------- 그림 자산 ----------
+// 자산은 "있으면 쓰고 없으면 직접 그린다". 못 불러와도 게임이 멈추면 안 된다
+// (파일을 직접 열었을 때, 배포가 덜 됐을 때, 느린 연결일 때 모두).
+const IMG = {};
+function loadImage(key, src){
+  if(typeof Image === 'undefined') return null;      // 헤드리스 테스트 환경
+  const im = new Image();
+  im.decoding = 'async';
+  im.onload  = ()=>{ im.ready = true; };
+  im.onerror = ()=>{ im.ready = false; };            // 조용히 포기하고 폴백으로 그린다
+  im.src = src;
+  IMG[key] = im;
+  return im;
+}
+const imgReady = key => {
+  const i = IMG[key];
+  return !!(i && i.ready && i.naturalWidth);
+};
+
+loadImage('bg', 'assets/bg/bg_grasslands.png');
+
+// ---------- 연출 세기 ----------
+// 히트스톱과 화면 흔들림은 조금만 넘쳐도 "게임이 버벅인다"로 느껴진다.
+// 두 숫자만 만지면 전체 세기가 한 번에 바뀐다. 0으로 두면 완전히 꺼진다.
+const FX_STOP = 0.62;     // 멈춤 세기
+const FX_SHAKE = 0.68;    // 흔들림 세기
+const STOP_MAX = 0.11;    // 한 번에 이보다 오래 멈추지 않는다 (연타로 쌓이는 걸 막는다)
+
+// 멈춤을 건다 — 이미 걸린 것보다 길 때만 갱신하고, 상한을 넘기지 않는다
+function freeze(sec){
+  hitstop = Math.min(Math.max(hitstop, sec * FX_STOP), STOP_MAX);
+}
+// 흔들림을 더한다
+function shakeBy(amount, max){
+  shake = Math.min(shake + amount * FX_SHAKE, (max || 12) * FX_SHAKE);
+}

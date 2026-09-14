@@ -76,7 +76,7 @@ function updateBoss(dt){
     case 'intro':
       // 하늘에서 쿵 하고 떨어진다
       if(b.onGround && b.t > .25){
-        shake = 18;
+        shake = 12 * FX_SHAKE;
         addRing(bx, GROUND_Y, 150, '#ffd9a0', 11);
         spawnParticles(bx, GROUND_Y, 20, '#b3825a', {up:280, spread:320, size:11});
         sfx('boom');
@@ -103,8 +103,8 @@ function updateBoss(dt){
     case 'roll':                       // 굴러온다 — 점프로 피한다
       if(b.x <= aL + 14 || b.x + b.w >= aR - 14){
         b.vx *= -1; b.dir *= -1; b.rolls++;
-        shake = 11;
-        addPunch(b.dir * 9, 0);
+        shake = 7.5 * FX_SHAKE;
+        addPunch(b.dir * 6, 0);
         spawnParticles(b.x + (b.vx > 0 ? 6 : b.w - 6), GROUND_Y - 14, 10, '#c9a06a', {up:220, spread:170});
         sfx('bash');
       }
@@ -131,7 +131,7 @@ function updateBoss(dt){
 
     case 'drop':                       // 내려와서 지친다
       if(b.onGround){
-        shake = 12;
+        shake = 8 * FX_SHAKE;
         addRing(bx, GROUND_Y, 110, '#ffd9a0', 8);
         spawnParticles(bx, GROUND_Y, 12, '#b3825a', {up:220, spread:240, size:9});
         sfx('boom');
@@ -191,15 +191,15 @@ function damageBoss(dmg, dir, fx){
   spawnParticles(cx, cy, weak > 1 ? 14 : 9, '#ffe9a8', {up:230, spread:210});
   addRing(cx, cy, weak > 1 ? 86 : 62, '#fff6c9', weak > 1 ? 10 : 7);
   addPunch(dir * (weak > 1 ? 10 : 5), 0);
-  hitstop = Math.max(hitstop, ((fx && fx.stop) || .06) * (weak > 1 ? 1.7 : 1));
-  shake = Math.min(shake + (weak > 1 ? 8 : 4), 15);
+  freeze(((fx && fx.stop) || .04) * (weak > 1 ? 1.4 : 1));
+  shakeBy(weak > 1 ? 5.5 : 3, 11);
   sfx(weak > 1 ? 'hit3' : 'hit');
   if(weak > 1) floatText(cx, cy - 30, '두 배!', '#ffd76a');
   syncBossBar();
 
   if(b.hp <= 0){
     setBossState('dead', 2.2);
-    hitstop = .38; shake = 22;
+    hitstop = .24 * FX_STOP; shake = 15 * FX_SHAKE;
     score += 500;
     floatText(cx, cy - 20, '+500', '#ffd76a');
     addRing(cx, cy, 200, '#fff1b8', 14);
