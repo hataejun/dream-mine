@@ -1,5 +1,5 @@
 // 타격 이펙트 — 입자 · 충격파 링 · 화면 펀치 · 떠오르는 숫자
-// 로드 순서 2/10 · 의존: core
+// 로드 순서 2/11 · 의존: core
 'use strict';
 
 function spawnParticles(x, y, n, color, opts){

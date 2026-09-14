@@ -1,0 +1,1087 @@
+{
+ "type": "map",
+ "version": "1.10",
+ "tiledversion": "1.10.2",
+ "orientation": "orthogonal",
+ "renderorder": "right-down",
+ "infinite": false,
+ "width": 138,
+ "height": 17,
+ "tilewidth": 32,
+ "tileheight": 32,
+ "backgroundcolor": "#a9e2f7",
+ "properties": [
+  {
+   "name": "bossAt",
+   "type": "int",
+   "value": 3700
+  },
+  {
+   "name": "arenaL",
+   "type": "int",
+   "value": 3540
+  },
+  {
+   "name": "arenaR",
+   "type": "int",
+   "value": 4400
+  },
+  {
+   "name": "width",
+   "type": "int",
+   "value": 4400
+  }
+ ],
+ "layers": [
+  {
+   "id": 15,
+   "name": "plats",
+   "type": "objectgroup",
+   "draworder": "topdown",
+   "opacity": 1,
+   "visible": true,
+   "x": 0,
+   "y": 0,
+   "objects": [
+    {
+     "id": 1,
+     "name": "",
+     "type": "plat",
+     "class": "plat",
+     "visible": true,
+     "rotation": 0,
+     "x": 300,
+     "y": 344,
+     "width": 170,
+     "height": 20
+    },
+    {
+     "id": 2,
+     "name": "",
+     "type": "plat",
+     "class": "plat",
+     "visible": true,
+     "rotation": 0,
+     "x": 560,
+     "y": 292,
+     "width": 150,
+     "height": 20
+    },
+    {
+     "id": 3,
+     "name": "",
+     "type": "plat",
+     "class": "plat",
+     "visible": true,
+     "rotation": 0,
+     "x": 1230,
+     "y": 300,
+     "width": 150,
+     "height": 20
+    },
+    {
+     "id": 4,
+     "name": "",
+     "type": "plat",
+     "class": "plat",
+     "visible": true,
+     "rotation": 0,
+     "x": 1460,
+     "y": 244,
+     "width": 140,
+     "height": 20
+    },
+    {
+     "id": 5,
+     "name": "",
+     "type": "plat",
+     "class": "plat",
+     "visible": true,
+     "rotation": 0,
+     "x": 1700,
+     "y": 330,
+     "width": 130,
+     "height": 20
+    },
+    {
+     "id": 6,
+     "name": "",
+     "type": "plat",
+     "class": "plat",
+     "visible": true,
+     "rotation": 0,
+     "x": 1900,
+     "y": 272,
+     "width": 130,
+     "height": 20
+    },
+    {
+     "id": 7,
+     "name": "",
+     "type": "plat",
+     "class": "plat",
+     "visible": true,
+     "rotation": 0,
+     "x": 2110,
+     "y": 218,
+     "width": 130,
+     "height": 20
+    },
+    {
+     "id": 8,
+     "name": "",
+     "type": "plat",
+     "class": "plat",
+     "visible": true,
+     "rotation": 0,
+     "x": 2330,
+     "y": 280,
+     "width": 150,
+     "height": 20
+    },
+    {
+     "id": 9,
+     "name": "",
+     "type": "plat",
+     "class": "plat",
+     "visible": true,
+     "rotation": 0,
+     "x": 2700,
+     "y": 330,
+     "width": 160,
+     "height": 20
+    },
+    {
+     "id": 10,
+     "name": "",
+     "type": "plat",
+     "class": "plat",
+     "visible": true,
+     "rotation": 0,
+     "x": 2960,
+     "y": 300,
+     "width": 140,
+     "height": 20
+    },
+    {
+     "id": 11,
+     "name": "",
+     "type": "plat",
+     "class": "plat",
+     "visible": true,
+     "rotation": 0,
+     "x": 3180,
+     "y": 336,
+     "width": 140,
+     "height": 20
+    },
+    {
+     "id": 12,
+     "name": "",
+     "type": "plat",
+     "class": "plat",
+     "visible": true,
+     "rotation": 0,
+     "x": 3360,
+     "y": 276,
+     "width": 140,
+     "height": 20
+    },
+    {
+     "id": 13,
+     "name": "",
+     "type": "plat",
+     "class": "plat",
+     "visible": true,
+     "rotation": 0,
+     "x": 3660,
+     "y": 300,
+     "width": 150,
+     "height": 20
+    },
+    {
+     "id": 14,
+     "name": "",
+     "type": "plat",
+     "class": "plat",
+     "visible": true,
+     "rotation": 0,
+     "x": 4080,
+     "y": 300,
+     "width": 150,
+     "height": 20
+    }
+   ]
+  },
+  {
+   "id": 20,
+   "name": "blocks",
+   "type": "objectgroup",
+   "draworder": "topdown",
+   "opacity": 1,
+   "visible": true,
+   "x": 0,
+   "y": 0,
+   "objects": [
+    {
+     "id": 16,
+     "name": "",
+     "type": "block",
+     "class": "block",
+     "visible": true,
+     "rotation": 0,
+     "x": 900,
+     "y": 382,
+     "width": 130,
+     "height": 60
+    },
+    {
+     "id": 17,
+     "name": "",
+     "type": "block",
+     "class": "block",
+     "visible": true,
+     "rotation": 0,
+     "x": 1030,
+     "y": 330,
+     "width": 130,
+     "height": 112
+    },
+    {
+     "id": 18,
+     "name": "",
+     "type": "block",
+     "class": "block",
+     "visible": true,
+     "rotation": 0,
+     "x": 2480,
+     "y": 382,
+     "width": 110,
+     "height": 60
+    },
+    {
+     "id": 19,
+     "name": "",
+     "type": "block",
+     "class": "block",
+     "visible": true,
+     "rotation": 0,
+     "x": 3040,
+     "y": 382,
+     "width": 120,
+     "height": 60
+    }
+   ]
+  },
+  {
+   "id": 37,
+   "name": "enemies",
+   "type": "objectgroup",
+   "draworder": "topdown",
+   "opacity": 1,
+   "visible": true,
+   "x": 0,
+   "y": 0,
+   "objects": [
+    {
+     "id": 21,
+     "name": "chestnut",
+     "type": "enemy",
+     "class": "enemy",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 520,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "chestnut"
+      }
+     ]
+    },
+    {
+     "id": 22,
+     "name": "chestnut",
+     "type": "enemy",
+     "class": "enemy",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 760,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "chestnut"
+      }
+     ]
+    },
+    {
+     "id": 23,
+     "name": "chestnut",
+     "type": "enemy",
+     "class": "enemy",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 1120,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "chestnut"
+      }
+     ]
+    },
+    {
+     "id": 24,
+     "name": "hopper",
+     "type": "enemy",
+     "class": "enemy",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 1330,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "hopper"
+      }
+     ]
+    },
+    {
+     "id": 25,
+     "name": "hopper",
+     "type": "enemy",
+     "class": "enemy",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 1560,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "hopper"
+      }
+     ]
+    },
+    {
+     "id": 26,
+     "name": "flyer",
+     "type": "enemy",
+     "class": "enemy",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 1820,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "flyer"
+      }
+     ]
+    },
+    {
+     "id": 27,
+     "name": "flyer",
+     "type": "enemy",
+     "class": "enemy",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 2060,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "flyer"
+      }
+     ]
+    },
+    {
+     "id": 28,
+     "name": "chestnut",
+     "type": "enemy",
+     "class": "enemy",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 2250,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "chestnut"
+      }
+     ]
+    },
+    {
+     "id": 29,
+     "name": "hopper",
+     "type": "enemy",
+     "class": "enemy",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 2420,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "hopper"
+      }
+     ]
+    },
+    {
+     "id": 30,
+     "name": "chestnut",
+     "type": "enemy",
+     "class": "enemy",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 2620,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "chestnut"
+      }
+     ]
+    },
+    {
+     "id": 31,
+     "name": "chestnut",
+     "type": "enemy",
+     "class": "enemy",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 2780,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "chestnut"
+      }
+     ]
+    },
+    {
+     "id": 32,
+     "name": "flyer",
+     "type": "enemy",
+     "class": "enemy",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 2900,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "flyer"
+      }
+     ]
+    },
+    {
+     "id": 33,
+     "name": "hopper",
+     "type": "enemy",
+     "class": "enemy",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 3080,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "hopper"
+      }
+     ]
+    },
+    {
+     "id": 34,
+     "name": "chestnut",
+     "type": "enemy",
+     "class": "enemy",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 3240,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "chestnut"
+      }
+     ]
+    },
+    {
+     "id": 35,
+     "name": "flyer",
+     "type": "enemy",
+     "class": "enemy",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 3420,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "flyer"
+      }
+     ]
+    },
+    {
+     "id": 36,
+     "name": "chestnut",
+     "type": "enemy",
+     "class": "enemy",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 3480,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "chestnut"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 62,
+   "name": "items",
+   "type": "objectgroup",
+   "draworder": "topdown",
+   "opacity": 1,
+   "visible": true,
+   "x": 0,
+   "y": 0,
+   "objects": [
+    {
+     "id": 38,
+     "name": "acorn",
+     "type": "item",
+     "class": "item",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 330,
+     "y": 300,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "acorn"
+      }
+     ]
+    },
+    {
+     "id": 39,
+     "name": "acorn",
+     "type": "item",
+     "class": "item",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 600,
+     "y": 250,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "acorn"
+      }
+     ]
+    },
+    {
+     "id": 40,
+     "name": "mushroom",
+     "type": "item",
+     "class": "item",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 640,
+     "y": 250,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "mushroom"
+      }
+     ]
+    },
+    {
+     "id": 41,
+     "name": "gem",
+     "type": "item",
+     "class": "item",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 1180,
+     "y": 380,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "gem"
+      }
+     ]
+    },
+    {
+     "id": 42,
+     "name": "acorn",
+     "type": "item",
+     "class": "item",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 1265,
+     "y": 256,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "acorn"
+      }
+     ]
+    },
+    {
+     "id": 43,
+     "name": "acorn",
+     "type": "item",
+     "class": "item",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 1500,
+     "y": 200,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "acorn"
+      }
+     ]
+    },
+    {
+     "id": 44,
+     "name": "leaf",
+     "type": "item",
+     "class": "item",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 1690,
+     "y": 286,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "leaf"
+      }
+     ]
+    },
+    {
+     "id": 45,
+     "name": "acorn",
+     "type": "item",
+     "class": "item",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 1740,
+     "y": 286,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "acorn"
+      }
+     ]
+    },
+    {
+     "id": 46,
+     "name": "acorn",
+     "type": "item",
+     "class": "item",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 1940,
+     "y": 228,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "acorn"
+      }
+     ]
+    },
+    {
+     "id": 47,
+     "name": "acorn",
+     "type": "item",
+     "class": "item",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 2150,
+     "y": 174,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "acorn"
+      }
+     ]
+    },
+    {
+     "id": 48,
+     "name": "acorn",
+     "type": "item",
+     "class": "item",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 2370,
+     "y": 236,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "acorn"
+      }
+     ]
+    },
+    {
+     "id": 49,
+     "name": "gem",
+     "type": "item",
+     "class": "item",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 2200,
+     "y": 174,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "gem"
+      }
+     ]
+    },
+    {
+     "id": 50,
+     "name": "heart",
+     "type": "item",
+     "class": "item",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 2530,
+     "y": 330,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "heart"
+      }
+     ]
+    },
+    {
+     "id": 51,
+     "name": "honey",
+     "type": "item",
+     "class": "item",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 2610,
+     "y": 380,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "honey"
+      }
+     ]
+    },
+    {
+     "id": 52,
+     "name": "acorn",
+     "type": "item",
+     "class": "item",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 2740,
+     "y": 286,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "acorn"
+      }
+     ]
+    },
+    {
+     "id": 53,
+     "name": "acorn",
+     "type": "item",
+     "class": "item",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 3000,
+     "y": 256,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "acorn"
+      }
+     ]
+    },
+    {
+     "id": 54,
+     "name": "gem",
+     "type": "item",
+     "class": "item",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 2900,
+     "y": 380,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "gem"
+      }
+     ]
+    },
+    {
+     "id": 55,
+     "name": "acorn",
+     "type": "item",
+     "class": "item",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 3220,
+     "y": 292,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "acorn"
+      }
+     ]
+    },
+    {
+     "id": 56,
+     "name": "acorn",
+     "type": "item",
+     "class": "item",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 3400,
+     "y": 232,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "acorn"
+      }
+     ]
+    },
+    {
+     "id": 57,
+     "name": "mushroom",
+     "type": "item",
+     "class": "item",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 3300,
+     "y": 232,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "mushroom"
+      }
+     ]
+    },
+    {
+     "id": 58,
+     "name": "gem",
+     "type": "item",
+     "class": "item",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 3380,
+     "y": 232,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "gem"
+      }
+     ]
+    },
+    {
+     "id": 59,
+     "name": "armor",
+     "type": "item",
+     "class": "item",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 3470,
+     "y": 300,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "armor"
+      }
+     ]
+    },
+    {
+     "id": 60,
+     "name": "heart",
+     "type": "item",
+     "class": "item",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 3450,
+     "y": 380,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "heart"
+      }
+     ]
+    },
+    {
+     "id": 61,
+     "name": "star",
+     "type": "item",
+     "class": "item",
+     "visible": true,
+     "rotation": 0,
+     "point": true,
+     "x": 3510,
+     "y": 380,
+     "width": 0,
+     "height": 0,
+     "properties": [
+      {
+       "name": "kind",
+       "type": "string",
+       "value": "star"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "nextlayerid": 63,
+ "nextobjectid": 63
+}
