@@ -57,6 +57,11 @@ node tools/tiled-to-stage.js
 - `js/stage-data.js`는 **생성물이라 손으로 고치지 않습니다**
 - 반대 방향(데이터 → Tiled 파일)이 필요하면 `node tools/stage-to-tiled.js`
 
+## 아이콘
+
+`icon.png`는 생성물입니다. 손으로 고치지 말고 `node tools/make-icon.js` 를 다시 돌리세요.
+iPad에서 "홈 화면에 추가"할 때 쓰이므로 없으면 빈 아이콘이 나옵니다.
+
 ## 코드 구조
 
 `index.html`의 `<script>` 순서가 곧 의존 순서입니다. 전역을 그대로 공유하는 구조라

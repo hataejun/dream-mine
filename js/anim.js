@@ -485,9 +485,9 @@ function drawHero(){
   // 머리카락 — 모자 밖으로 나온 부분만. 한 박자 늦게 따라 흔들린다.
   ctx.save(); ctx.rotate(p.hairLag * .8);
   ctx.fillStyle = HAIR;
-  ctx.beginPath(); ctx.ellipse(-15, -3, 4.2, 6.4, .18, 0, 6.2832); ctx.fill();   // 뒤통수
-  ctx.beginPath(); ctx.ellipse(-16, 3.5, 3.4, 4.2, .1, 0, 6.2832); ctx.fill();   // 목덜미
-  ctx.beginPath(); ctx.ellipse(15.6, -1, 3.0, 4.4, -.14, 0, 6.2832); ctx.fill(); // 구레나룻
+  // 귀(±16.5, y 2)를 덮지 않게 뒤통수만 귀 위쪽에 남긴다.
+  // 옆머리·구레나룻은 두지 않는다 — 귀를 가리면 금방 덥수룩해 보인다.
+  ctx.beginPath(); ctx.ellipse(-14.5, -7, 4.0, 4.6, .18, 0, 6.2832); ctx.fill();
   // 모자 챙 밑으로 비져나온 앞머리
   ctx.beginPath();
   ctx.moveTo(-16.5, -5);
