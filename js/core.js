@@ -121,6 +121,15 @@ const imgReady = key => {
 
 loadImage('bg', 'assets/bg/bg_grasslands.png');
 
+// 지형 타일 (원본 70×70, 화면에는 절반 크기로 깐다)
+const TS = 35;
+// grassCenter 가 잔디 밑 흙이다. dirt* 는 이름과 달리 다른 바이옴(연한 색)이라 안 쓴다.
+for(const t of ['grassMid','grassLeft','grassRight',
+                'grassHalfMid','grassHalfLeft','grassHalfRight',
+                'grassCenter','grassCliffLeft','grassCliffRight']){
+  loadImage(t, 'assets/tiles/' + t + '.png');
+}
+
 // ---------- 연출 세기 ----------
 // 히트스톱과 화면 흔들림은 조금만 넘쳐도 "게임이 버벅인다"로 느껴진다.
 // 두 숫자만 만지면 전체 세기가 한 번에 바뀐다. 0으로 두면 완전히 꺼진다.

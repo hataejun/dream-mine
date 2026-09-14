@@ -41,7 +41,7 @@ function makePlayer(){
     anim:'idle', animT:0, blendT:0, blendDur:0.09,
     pose:Object.assign({}, BASE_POSE), poseFrom:null,
     flapLag:0, hairLag:0, blinkT:2.5,
-    weaponAng:-0.45, weaponProg:-1,
+    weaponAng:-0.45, weaponProg:-1, armRotS:undefined,
   };
 }
 

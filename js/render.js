@@ -104,38 +104,71 @@ function tree(x, baseY, s){
 function drawPlatforms(){
   const l = cam.x - 40, r = cam.x + W + 40;
 
-  // 땅
-  ctx.fillStyle = '#7cc98a'; ctx.fillRect(l, GROUND_Y, r-l, H-GROUND_Y);
-  ctx.fillStyle = '#95dc9f'; ctx.fillRect(l, GROUND_Y, r-l, 14);
-  ctx.fillStyle = '#b3825a'; ctx.fillRect(l, GROUND_Y+30, r-l, H-GROUND_Y-30);
+  // 타일을 못 불러오면 예전처럼 색으로 칠한다 — 화면이 비지 않게
+  const tiled = imgReady('grassMid') && imgReady('grassCenter');
 
-  // 흙 점박이 — 월드 좌표에 고정돼 있어야 흐르는 게 보인다
-  ctx.fillStyle = 'rgba(255,255,255,.10)';
-  const step = 97;
-  for(let k = Math.floor(l/step); k <= Math.ceil(r/step); k++){
-    const x = k * step;
-    ctx.beginPath();
-    ctx.arc(x, GROUND_Y + 42 + (((k*53) % 26 + 26) % 26), 3 + (((k % 3) + 3) % 3), 0, 6.2832);
-    ctx.fill();
+  if(tiled){
+    // 땅 — 타일 격자를 월드 좌표에 고정해야 카메라가 움직여도 타일이 흐르지 않는다
+    const k0 = Math.floor(l / TS), k1 = Math.ceil(r / TS);
+    for(let k = k0; k <= k1; k++){
+      const x = k * TS;
+      ctx.drawImage(IMG.grassMid, x, GROUND_Y, TS + .5, TS + .5);
+      for(let y = GROUND_Y + TS; y < H; y += TS){
+        ctx.drawImage(IMG.grassCenter, x, y, TS + .5, TS + .5);
+      }
+    }
+  } else {
+    ctx.fillStyle = '#7cc98a'; ctx.fillRect(l, GROUND_Y, r-l, H-GROUND_Y);
+    ctx.fillStyle = '#95dc9f'; ctx.fillRect(l, GROUND_Y, r-l, 14);
+    ctx.fillStyle = '#b3825a'; ctx.fillRect(l, GROUND_Y+30, r-l, H-GROUND_Y-30);
+    ctx.fillStyle = 'rgba(255,255,255,.10)';
+    const step = 97;
+    for(let k = Math.floor(l/step); k <= Math.ceil(r/step); k++){
+      const x = k * step;
+      ctx.beginPath();
+      ctx.arc(x, GROUND_Y + 42 + (((k*53) % 26 + 26) % 26), 3 + (((k % 3) + 3) % 3), 0, 6.2832);
+      ctx.fill();
+    }
   }
 
-  // 솔리드 블록 (언덕 덩어리)
+  // 솔리드 블록 (언덕 덩어리) — 윗줄은 잔디, 아래는 흙. 양 끝은 가장자리 타일로.
   for(const b of STAGE.blocks){
     if(b.x + b.w < l || b.x > r) continue;
-    ctx.fillStyle = '#b3825a'; roundRect(b.x, b.y, b.w, b.h, 8); ctx.fill();
-    ctx.fillStyle = '#8ed49a'; roundRect(b.x, b.y, b.w, 18, 8); ctx.fill();
-    ctx.fillStyle = '#a9e6b2'; roundRect(b.x, b.y, b.w, 9, 7); ctx.fill();
-    ctx.fillStyle = 'rgba(255,255,255,.09)';
-    ctx.beginPath(); ctx.arc(b.x + b.w*.3, b.y + b.h*.6, 4, 0, 6.2832); ctx.fill();
-    ctx.beginPath(); ctx.arc(b.x + b.w*.7, b.y + b.h*.75, 3, 0, 6.2832); ctx.fill();
+    if(tiled){
+      const cols = Math.max(1, Math.round(b.w / TS));
+      const rows = Math.max(1, Math.round(b.h / TS));
+      const cw = b.w / cols, ch = b.h / rows;
+      for(let c = 0; c < cols; c++){
+        const edge = cols === 1 ? 'Mid' : c === 0 ? 'Left' : c === cols-1 ? 'Right' : 'Mid';
+        for(let y = 0; y < rows; y++){
+          const key = y === 0 ? 'grass' + edge
+                    : edge === 'Mid' ? 'grassCenter' : 'grassCliff' + edge;
+          ctx.drawImage(IMG[key], b.x + c*cw, b.y + y*ch, cw + .5, ch + .5);
+        }
+      }
+    } else {
+      ctx.fillStyle = '#b3825a'; roundRect(b.x, b.y, b.w, b.h, 8); ctx.fill();
+      ctx.fillStyle = '#8ed49a'; roundRect(b.x, b.y, b.w, 18, 8); ctx.fill();
+      ctx.fillStyle = '#a9e6b2'; roundRect(b.x, b.y, b.w, 9, 7); ctx.fill();
+    }
   }
 
-  // 떠 있는 발판 (통나무 느낌)
+  // 떠 있는 발판 — grassHalf* 는 위쪽 절반만 채워진 얇은 발판용 타일이다
+  const halfTiled = tiled && imgReady('grassHalfMid');
   for(const p of STAGE.plats){
     if(p.x + p.w < l || p.x > r) continue;
-    roundRect(p.x, p.y, p.w, 28, 9); ctx.fillStyle = '#b3825a'; ctx.fill();
-    roundRect(p.x, p.y, p.w, 20, 9); ctx.fillStyle = '#8ed49a'; ctx.fill();
-    roundRect(p.x, p.y, p.w, 10, 8); ctx.fillStyle = '#a9e6b2'; ctx.fill();
+    if(halfTiled){
+      const cols = Math.max(1, Math.round(p.w / TS));
+      const cw = p.w / cols;
+      for(let c = 0; c < cols; c++){
+        const edge = cols === 1 ? 'Mid' : c === 0 ? 'Left' : c === cols-1 ? 'Right' : 'Mid';
+        ctx.drawImage(IMG['grassHalf' + edge], p.x + c*cw, p.y - 1, cw + .5, 42);
+      }
+    } else {
+      roundRect(p.x, p.y, p.w, 28, 9); ctx.fillStyle = '#b3825a'; ctx.fill();
+      roundRect(p.x, p.y, p.w, 20, 9); ctx.fillStyle = '#8ed49a'; ctx.fill();
+      roundRect(p.x, p.y, p.w, 10, 8); ctx.fillStyle = '#a9e6b2'; ctx.fill();
+    }
   }
 
   // 보스 아레나 입구 — 들어가면 덩굴이 내려와 닫힌다

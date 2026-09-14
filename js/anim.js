@@ -158,7 +158,8 @@ function weaponAngle(p){
   p.weaponProg = prog;
   if(id === 'sword'){
     const st = SWORD_COMBO[p.combo];
-    if(prog < 0) return -0.5 + Math.sin(p.animT * 2.6) * 0.07;
+    // 쉴 땐 자루 끝이 위를 향한다 (연장을 어깨에 걸치듯). 손 위치는 아래 armRot이 따로 정한다.
+    if(prog < 0) return -0.62 + Math.sin(p.animT * 2.6) * 0.06;
     // 앞부분은 천천히 젖혔다가(예비동작) 뒤에서 빠르게 지나간다
     const e = prog < .28 ? (prog/.28)*.18 : .18 + ((prog-.28)/.72)*.82;
     return st.arc[0] + (st.arc[1] - st.arc[0]) * e;
@@ -192,9 +193,19 @@ function updateAnim(p, dt){
     pose = lerpPose(p.poseFrom, pose, 1 - p.blendT/p.blendDur);
   }
 
-  // 팔은 무기를 따라간다
+  // 팔 각도 — 휘두르는 중에만 무기를 따라간다.
+  // 쉴 때까지 무기를 따라가게 두면 손이 얼굴 옆까지 올라온다.
   p.weaponAng = weaponAngle(p);
-  pose.armRot = clamp(p.weaponAng * .55 - .12, -1.5, 1.3);
+  const swinging = p.atk > 0;
+  const REST_ARM = 0.62;                      // 팔을 가슴~허리 높이로 내려 쥔다
+  const armTarget = swinging
+    ? clamp(p.weaponAng * .55 - .12, -1.5, 1.3)
+    : REST_ARM + Math.sin(p.animT * 2.6) * 0.05;
+  if(p.armRotS === undefined) p.armRotS = armTarget;
+  // 휘두를 땐 즉시 따라가고(빨라야 한다), 돌아올 땐 부드럽게 내린다
+  p.armRotS = swinging ? armTarget
+                       : p.armRotS + (armTarget - p.armRotS) * Math.min(1, dt * 11);
+  pose.armRot = p.armRotS;
   p.pose = pose;
 
   // 잠옷 자락과 머리카락은 몸을 한 박자 늦게 따라온다 — 잔동작(follow-through)
@@ -231,7 +242,7 @@ function drawHero(){
   // 그림자 — 몸 변형을 따라가지 않는다
   ctx.save();
   ctx.globalAlpha = .18; ctx.fillStyle = '#000';
-  ctx.beginPath(); ctx.ellipse(0, 2, 17 * (po.sx*.5+.5), 5.5, 0, 0, 6.2832); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(0, 0.5, 14 * (po.sx*.5+.5), 4.2, 0, 0, 6.2832); ctx.fill();
   ctx.restore();
 
   ctx.scale(p.facing, 1);
@@ -336,16 +347,16 @@ function drawHero(){
     ctx.fillStyle = SHOE;
     ctx.beginPath();
     ctx.moveTo(-4.6, -0.5);
-    ctx.quadraticCurveTo(-5.6, 5.2, 0, 5.6);
-    ctx.quadraticCurveTo(7.2, 5.8, 8.6, 2.6);        // 앞코가 앞으로 나온다
+    ctx.quadraticCurveTo(-5.6, 5.6, 0, 6.0);
+    ctx.quadraticCurveTo(7.2, 6.2, 8.6, 3.0);        // 앞코가 앞으로 나온다
     ctx.quadraticCurveTo(8.2, -0.8, 4.4, -1);
     ctx.closePath(); ctx.fill();
     ctx.strokeStyle = SHOE_D; ctx.lineWidth = 1.5; ctx.stroke();
     ctx.fillStyle = SHOE_D;                          // 밑창
     ctx.beginPath();
-    ctx.moveTo(-5, 3.4); ctx.quadraticCurveTo(0, 6.2, 8.4, 3.2);
-    ctx.quadraticCurveTo(7.4, 5.8, 0, 5.8);
-    ctx.quadraticCurveTo(-5.4, 5.6, -5, 3.4);
+    ctx.moveTo(-5, 3.8); ctx.quadraticCurveTo(0, 6.6, 8.4, 3.6);
+    ctx.quadraticCurveTo(7.4, 6.2, 0, 6.2);
+    ctx.quadraticCurveTo(-5.4, 6.0, -5, 3.8);
     ctx.closePath(); ctx.fill();
     ctx.restore();
   }
@@ -354,19 +365,45 @@ function drawHero(){
 
   // ----- 뒷팔 -----
   ctx.lineCap = 'round';
-  ctx.strokeStyle = INK; ctx.lineWidth = 9.2;
-  ctx.beginPath();
-  ctx.moveTo(-8.5, -37);
-  ctx.lineTo(-12 - po.legF*.35, -25 + po.legF*.3);
-  ctx.stroke();
-  ctx.strokeStyle = pjD; ctx.lineWidth = 7;
-  ctx.beginPath();
-  ctx.moveTo(-8.5, -37);
-  ctx.lineTo(-12 - po.legF*.35, -25 + po.legF*.3);
-  ctx.stroke();
+  // 앞팔과 같은 어깨 높이에서 나오게 맞춘다 (좌우 높이가 어긋나면 어색하다)
+  const bShX = -10.5, bShY = -30.5;
+  const bPawX = -13 - po.legF*.35, bPawY = -20 + po.legF*.3;
+  ctx.strokeStyle = INK; ctx.lineWidth = 9.4;
+  ctx.beginPath(); ctx.moveTo(bShX, bShY);
+  ctx.quadraticCurveTo(bShX - 3.4, (bShY + bPawY)/2, bPawX, bPawY); ctx.stroke();
+  ctx.strokeStyle = pjD; ctx.lineWidth = 7.2;
+  ctx.beginPath(); ctx.moveTo(bShX, bShY);
+  ctx.quadraticCurveTo(bShX - 3.4, (bShY + bPawY)/2, bPawX, bPawY); ctx.stroke();
   ctx.fillStyle = GLOVE;                                   // 뒷손 장갑
-  ctx.beginPath(); ctx.arc(-12 - po.legF*.35, -25 + po.legF*.3, 4.6, 0, 6.2832); ctx.fill();
+  ctx.beginPath(); ctx.arc(bPawX, bPawY, 4.4, 0, 6.2832); ctx.fill();
   ctx.strokeStyle = GLOVE_D; ctx.lineWidth = 1.4; ctx.stroke();
+
+  // ----- 앞팔 ----- 몸통보다 먼저 그려서 어깨가 몸통에 가려지게 한다.
+  // 팔을 몸통 위에 얹으면 이음새가 보여서 "붙여놓은 막대"처럼 보인다.
+  const shX = 10.5, shY = -30.5;
+  const armLen = 13;
+  const pawX = shX + Math.cos(po.armRot) * armLen;
+  const pawY = shY + Math.sin(po.armRot) * armLen;
+  const armC = gear >= 1 ? (gear >= 3 ? '#e6fbf8' : gear >= 2 ? '#cfe7f8' : '#cfa97a') : pj;
+
+  // 팔꿈치를 살짝 굽힌다. 곧은 막대는 몸에 얹어놓은 것처럼 보인다.
+  const _dx = pawX - shX, _dy = pawY - shY;
+  const _dl = Math.hypot(_dx, _dy) || 1;
+  const elX = (shX + pawX)/2 - _dy/_dl * 3.4;
+  const elY = (shY + pawY)/2 + _dx/_dl * 3.4;
+
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  ctx.strokeStyle = INK; ctx.lineWidth = 10.6;
+  ctx.beginPath(); ctx.moveTo(shX - 3, shY); ctx.quadraticCurveTo(elX, elY, pawX, pawY); ctx.stroke();
+  ctx.strokeStyle = armC; ctx.lineWidth = 8.2;
+  ctx.beginPath(); ctx.moveTo(shX - 3, shY); ctx.quadraticCurveTo(elX, elY, pawX, pawY); ctx.stroke();
+  if(gear === 0){                              // 잠옷 소매 단
+    ctx.strokeStyle = pjL; ctx.lineWidth = 3.4;
+    ctx.beginPath();
+    ctx.moveTo(elX, elY);
+    ctx.quadraticCurveTo((elX+pawX)/2, (elY+pawY)/2, pawX, pawY);
+    ctx.stroke();
+  }
 
   // ----- 상의 -----
   ctx.fillStyle = pj;
@@ -529,28 +566,7 @@ function drawHero(){
 
   ctx.restore();   // 머리
 
-  // ----- 앞팔 + 무기 -----
-  // 어깨는 머리 아래, 상의 윗부분에 둔다.
-  const shX = 11, shY = -37;
-  const armLen = 13.5;
-  const pawX = shX + Math.cos(po.armRot) * armLen;
-  const pawY = shY + Math.sin(po.armRot) * armLen;
-
-  ctx.lineCap = 'round';
-  ctx.strokeStyle = INK;                        // 윤곽 — 몸통과 팔을 구분해준다
-  ctx.lineWidth = 10.8;
-  ctx.beginPath(); ctx.moveTo(shX, shY); ctx.lineTo(pawX, pawY); ctx.stroke();
-  ctx.strokeStyle = gear >= 1 ? (gear >= 3 ? '#e6fbf8' : gear >= 2 ? '#cfe7f8' : '#cfa97a') : pj;
-  ctx.lineWidth = 8.4;
-  ctx.beginPath(); ctx.moveTo(shX, shY); ctx.lineTo(pawX, pawY); ctx.stroke();
-  if(gear === 0){                              // 잠옷 소매 단
-    ctx.strokeStyle = pjL; ctx.lineWidth = 3.4;
-    ctx.beginPath();
-    ctx.moveTo(shX + Math.cos(po.armRot)*8, shY + Math.sin(po.armRot)*8);
-    ctx.lineTo(pawX - Math.cos(po.armRot)*1, pawY - Math.sin(po.armRot)*1);
-    ctx.stroke();
-  }
-
+  // ----- 손 + 무기 ----- 팔은 위에서 몸통 뒤에 그렸고, 여기선 앞으로 나오는 것만 그린다
   drawHeldWeapon(pawX, pawY, shX, shY);
 
   // 주먹은 무기 위에 — 손으로 자루를 쥐고 있는 게 보여야 한다
