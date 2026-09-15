@@ -4,11 +4,12 @@
 
 // ---------- 무기 정의 ----------
 // 마인크래프트처럼 손에 든 무기가 공격 방식을 결정한다.
+// 아이콘은 js/core.js 의 SVG 함수가 강화 단계 색에 맞춰 그린다.
 const WEAPONS = [
   // 칼의 수치는 아래 SWORD_COMBO가 단계별로 쥔다
-  { id:'sword',  name:'곡괭이', ico:'⛏️' },
-  { id:'shield', name:'방패',  ico:'🛡️', cool:0.45, windup:0.04, active:0.16 },
-  { id:'acorn',  name:'도토리', ico:'🌰', cool:0.36, windup:0.09, active:0.01 },
+  { id:'sword',  name:'곡괭이' },
+  { id:'shield', name:'방패',  cool:0.45, windup:0.04, active:0.16 },
+  { id:'acorn',  name:'도토리', cool:0.36, windup:0.09, active:0.01 },
 ];
 
 // 칼 3단 콤보 — 1타·2타는 빠르고, 마무리는 느리지만 크고 세다

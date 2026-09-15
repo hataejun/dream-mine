@@ -108,16 +108,16 @@ function syncPowers(){
   const p = player;
   if(!p) return;
   const on = [];
-  if(p.armor)      on.push(['💠', '', false]);
-  if(p.big)        on.push(['🍄', '', false]);
-  if(p.starT  > 0) on.push(['⭐', Math.ceil(p.starT),  p.starT  < 3]);
-  if(p.honeyT > 0) on.push(['🍯', Math.ceil(p.honeyT), p.honeyT < 3]);
-  if(p.leafT  > 0) on.push(['🍃', Math.ceil(p.leafT),  p.leafT  < 3]);
+  if(p.armor)      on.push(['armor', '', false]);
+  if(p.big)        on.push(['big',   '', false]);
+  if(p.starT  > 0) on.push(['star',  Math.ceil(p.starT),  p.starT  < 3]);
+  if(p.honeyT > 0) on.push(['honey', Math.ceil(p.honeyT), p.honeyT < 3]);
+  if(p.leafT  > 0) on.push(['leaf',  Math.ceil(p.leafT),  p.leafT  < 3]);
   const sig = on.map(a => a.join('')).join('|');
   if(sig === powerSig) return;
   powerSig = sig;
-  powersEl.innerHTML = on.map(([ico, t, low]) =>
-    '<span class="power' + (low ? ' low' : '') + '">' + ico +
+  powersEl.innerHTML = on.map(([kind, t, low]) =>
+    '<span class="power' + (low ? ' low' : '') + '">' + (POWER_SVG[kind] || '') +
     (t ? '<b>' + t + '</b>' : '') + '</span>').join('');
 }
 

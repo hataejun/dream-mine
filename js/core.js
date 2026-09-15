@@ -150,3 +150,59 @@ function freeze(sec){
 function shakeBy(amount, max){
   shake = Math.min(shake + amount * FX_SHAKE, (max || 12) * FX_SHAKE);
 }
+
+// ---------- HUD 아이콘 ----------
+// 이모지는 기기마다 모양이 달라서 SVG로 직접 그린다.
+// 캔버스 그림과 색을 맞추고, 무기는 강화 단계 색까지 반영한다.
+const SVG_OPEN = '<svg viewBox="0 0 24 24" aria-hidden="true">';
+
+// 곡괭이 — 자루 + 자루 끝을 가로지르는 초승달 날
+function pickaxeSVG(grip, gripD, blade, edge){
+  return SVG_OPEN +
+    '<path d="M5.6 19.4 16 7.2" stroke="' + gripD + '" stroke-width="5.6" stroke-linecap="round"/>' +
+    '<path d="M5.6 19.4 16 7.2" stroke="' + grip + '" stroke-width="3.6" stroke-linecap="round"/>' +
+    '<path d="M8.2 3.2Q16.6 4.4 20 11.4Q16.8 9.2 14.2 10.1Q14.6 6.2 8.2 3.2Z" ' +
+      'fill="' + blade + '" stroke="' + edge + '" stroke-width="1.1" stroke-linejoin="round"/>' +
+    '<circle cx="15.6" cy="7.6" r="2.1" fill="' + gripD + '"/>' +
+    '</svg>';
+}
+function shieldSVG(face, rim){
+  return SVG_OPEN +
+    '<path d="M12 2.4 20 5.4V12c0 5-3.6 8.4-8 9.8C7.6 20.4 4 17 4 12V5.4Z" ' +
+      'fill="' + face + '" stroke="' + rim + '" stroke-width="1.6" stroke-linejoin="round"/>' +
+    '<path d="M12 6.4v11M12 9.6l3.4-2.4M12 13l3.4-2.4M12 9.6 8.6 7.2M12 13l-3.4-2.4" ' +
+      'stroke="' + rim + '" stroke-width="1.2" stroke-linecap="round"/>' +
+    '</svg>';
+}
+function acornSVG(nut, cap){
+  return SVG_OPEN +
+    '<ellipse cx="12" cy="14.8" rx="6.1" ry="6.9" fill="' + nut + '"/>' +
+    '<rect x="5.2" y="6" width="13.6" height="6" rx="2.6" fill="' + cap + '"/>' +
+    '<rect x="10.8" y="2.4" width="2.4" height="4.4" rx="1.2" fill="' + cap + '"/>' +
+    '<ellipse cx="9.6" cy="14.4" rx="1.6" ry="2.4" fill="rgba(255,255,255,.38)"/>' +
+    '</svg>';
+}
+
+// 강화 효과 칩
+const POWER_SVG = {
+  armor: SVG_OPEN +
+    '<path d="M4.8 5.6h14.4v7c0 5-3.6 7.8-7.2 8.8-3.6-1-7.2-3.8-7.2-8.8Z" ' +
+      'fill="#e6fbf8" stroke="#2fa79c" stroke-width="1.6" stroke-linejoin="round"/>' +
+    '<path d="M12 8.6 15.6 12 12 15.4 8.4 12Z" fill="#2fa79c"/></svg>',
+  big: SVG_OPEN +
+    '<path d="M2.8 12.4C2.8 7 6.9 3.4 12 3.4s9.2 3.6 9.2 9Z" fill="#e84d4d" stroke="#b62f2f" stroke-width="1.2" stroke-linejoin="round"/>' +
+    '<circle cx="8" cy="8.6" r="1.7" fill="#fff"/><circle cx="14.6" cy="7.4" r="1.3" fill="#fff"/>' +
+    '<path d="M9.4 12.4h5.2v5.4c0 1.8-1.2 2.8-2.6 2.8s-2.6-1-2.6-2.8Z" fill="#ffeccb" stroke="#d9bd93" stroke-width="1.1"/></svg>',
+  star: SVG_OPEN +
+    '<path d="M12 2.6 14.7 9h6.7l-5.4 4.1 2 6.6L12 15.8 6 19.7l2-6.6L2.6 9h6.7Z" ' +
+      'fill="#ffd23f" stroke="#dda413" stroke-width="1.3" stroke-linejoin="round"/></svg>',
+  honey: SVG_OPEN +
+    '<rect x="5.4" y="8.6" width="13.2" height="11.6" rx="3.4" fill="#c98a4b" stroke="#8a5a30" stroke-width="1.3"/>' +
+    '<rect x="4.2" y="5.6" width="15.6" height="4.2" rx="2" fill="#ffb84d" stroke="#d99a2e" stroke-width="1.1"/>' +
+    '<path d="M14.6 9.6q2 3 .4 5.2-1.8-2.2 -.4-5.2Z" fill="#ffb84d"/>' +
+    '<rect x="10.4" y="2.6" width="3.2" height="3.4" rx="1.4" fill="#8a5a30"/></svg>',
+  leaf: SVG_OPEN +
+    '<path d="M4.4 19.6Q3.2 8 12 4.4Q20.6 4 20 11.4Q18.8 19.2 4.4 19.6Z" ' +
+      'fill="#7bd35a" stroke="#4f9a3c" stroke-width="1.4" stroke-linejoin="round"/>' +
+    '<path d="M5.4 18.6Q11 12 18.4 7.4" stroke="#4f9a3c" stroke-width="1.3" stroke-linecap="round" fill="none"/></svg>',
+};

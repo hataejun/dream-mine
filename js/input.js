@@ -90,7 +90,7 @@ WEAPONS.forEach((w,i)=>{
   el.className = 'slot';
   el.innerHTML = '<span class="key">'+(i+1)+'</span>'
                + '<span class="tier"></span>'
-               + '<span class="ico">'+w.ico+'</span>'
+               + '<span class="ico"></span>'
                + '<span class="nm">'+w.name+'</span>';
   el.addEventListener('pointerdown', e=>{ e.preventDefault(); selectWeapon(i); audioUnlock(); });
   hotbarEl.appendChild(el);
@@ -114,5 +114,15 @@ function syncHotbar(){
     // 강화된 무기는 이름 앞에 단계 표시가 붙는다
     el.querySelector('.tier').textContent = lv > 0 ? TIERS[lv].chip : '';
     el.querySelector('.nm').textContent = (lv > 0 ? TIERS[lv].short : '') + WEAPONS[i].name;
+    // 아이콘도 강화 단계 색을 따라간다 — 핫바만 봐도 지금 무엇을 들고 있는지 보인다
+    const t = TIERS[lv];
+    const svg = WEAPONS[i].id === 'sword'  ? pickaxeSVG(t.grip, t.edge, t.blade, t.edge)
+              : WEAPONS[i].id === 'shield' ? shieldSVG(t.shield, t.shieldRim)
+              :                              acornSVG(t.nut, t.nutCap);
+    const ico = el.querySelector('.ico');
+    if(ico.dataset.k !== String(lv) + WEAPONS[i].id){
+      ico.dataset.k = String(lv) + WEAPONS[i].id;
+      ico.innerHTML = svg;
+    }
   });
 }
